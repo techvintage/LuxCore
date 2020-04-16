@@ -20,9 +20,16 @@
 
 #include "slg/engines/cpurenderengine.h"
 
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined (WIN64)
+#include <Windows.h>
+#include <Versionhelpers.h>
+#endif
+
 using namespace std;
 using namespace luxrays;
 using namespace slg;
+
+int cpuCount = 0;
 
 //------------------------------------------------------------------------------
 // CPURenderThread
@@ -102,7 +109,13 @@ void CPURenderThread::WaitForDone() const {
 
 CPURenderEngine::CPURenderEngine(const RenderConfig *cfg) : RenderEngine(cfg) {
 	// I have to use u_int because Property::Get<size_t>() is not defined
-	const size_t renderThreadCount =  Max<u_int>(1u, cfg->cfg.Get(GetDefaultProps().Get("native.threads.count")).Get<u_int>());
+	//const size_t renderThreadCount =  Max<u_int>(1u, cfg->cfg.Get(GetDefaultProps().Get("native.threads.count")).Get<u_int>());
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo(&sysInfo);
+	cpuCount = (IsWindows7OrGreater) ? GetActiveProcessorCount(ALL_PROCESSOR_GROUPS) : sysInfo.dwNumberOfProcessors;
+#endif
+	const size_t renderThreadCount = cpuCount;
 
 	//--------------------------------------------------------------------------
 	// Allocate devices
