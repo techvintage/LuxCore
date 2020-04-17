@@ -56,7 +56,6 @@ void PathCPURenderThread::RenderFunc() {
 	// Determine which processor group to bind the thread to.
 	for (auto i = 0U; i < GetActiveProcessorGroupCount(); ++i)
 	{
-		//std::cout <<"i:"<< i;
 		totalProcessors += GetActiveProcessorCount(i);
 		if (totalProcessors >= processorIndex)
 		{

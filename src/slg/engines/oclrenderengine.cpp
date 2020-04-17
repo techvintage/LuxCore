@@ -109,12 +109,17 @@ OCLRenderEngine::OCLRenderEngine(const RenderConfig *rcfg,
 		vector<DeviceDescription *> nativeDescs = ctx->GetAvailableDeviceDescriptions();
 		DeviceDescription::Filter(DEVICE_TYPE_NATIVE, nativeDescs);
 		nativeDescs.resize(1);
-		nativeRenderThreadCount = cfg.Get(GetDefaultProps().Get("opencl.native.threads.count")).Get<u_int>();
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 		SYSTEM_INFO sysInfo;
 		GetSystemInfo(&sysInfo);
 		processorCount = (IsWindows7OrGreater) ? GetActiveProcessorCount(ALL_PROCESSOR_GROUPS) : sysInfo.dwNumberOfProcessors;
-		nativeRenderThreadCount = processorCount;
+#endif
+		nativeRenderThreadCount = cfg.Get(GetDefaultProps().Get("opencl.native.threads.count")).Get<u_int>();
+		std::cout << "nativeRenderThreadCount" << nativeRenderThreadCount;
+
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
+		if(nativeRenderThreadCount == 0)
+			nativeRenderThreadCount = processorCount;
 #endif
 		
 		if (nativeRenderThreadCount > 0)
@@ -122,7 +127,8 @@ OCLRenderEngine::OCLRenderEngine(const RenderConfig *rcfg,
 	} else
 		nativeRenderThreadCount = 0;
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-		nativeRenderThreadCount = processorCount; 
+	if (nativeRenderThreadCount == 0)
+		nativeRenderThreadCount = processorCount;
 #endif
 		
 #endif
@@ -150,7 +156,8 @@ const Properties &OCLRenderEngine::GetDefaultProps() {
 #endif
 			Property("opencl.gpu.workgroup.size")(32) <<
 			Property("opencl.devices.select")("") <<
-			Property("opencl.native.threads.count")(boost::thread::hardware_concurrency());
+		    Property("opencl.native.threads.count")(processorCount);
+			//Property("opencl.native.threads.count")(boost::thread::hardware_concurrency());
 
 	return props;
 }
