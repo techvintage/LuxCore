@@ -49,8 +49,8 @@ void PathCPURenderThread::RenderFunc() {
 	PathCPURenderEngine *engine = (PathCPURenderEngine *)renderEngine;
 	const PathTracer &pathTracer = engine->pathTracer;
 
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined (WIN64)
 	auto totalProcessors = 0U;
-	
 	int processorIndex = threadIndex % GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 	
 	// Determine which processor group to bind the thread to.
@@ -66,7 +66,7 @@ void PathCPURenderThread::RenderFunc() {
 			break;
 		}
 	}
-
+#endif
 	// (engine->seedBase + 1) seed is used for sharedRndGen
 	RandomGenerator *rndGen = new RandomGenerator(engine->seedBase + 1 + threadIndex);
 
