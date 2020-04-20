@@ -23,7 +23,6 @@
 
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 #include <Windows.h>
-#include <Versionhelpers.h>
 #endif
 
 using namespace std;

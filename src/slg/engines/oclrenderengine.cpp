@@ -25,7 +25,6 @@
 
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 #include <Windows.h>
-#include <Versionhelpers.h>
 #endif
 
 using namespace std;
@@ -127,12 +126,10 @@ Properties OCLRenderEngine::ToProperties(const Properties &cfg) {
 const Properties &OCLRenderEngine::GetDefaultProps() {
 
 //For Windows version greater than Windows 7,modern way of calculating processor count is used 
-//else it falls back to default way of calculating processor count
+//May not work with Windows version prior to Windows 7
 
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-	SYSTEM_INFO sysInfo;
-	GetSystemInfo(&sysInfo);
-	int processorCount = (IsWindows7OrGreater) ? GetActiveProcessorCount(ALL_PROCESSOR_GROUPS) : sysInfo.dwNumberOfProcessors;
+	int processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 #endif
 
 	static Properties props = Properties() <<

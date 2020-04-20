@@ -22,7 +22,6 @@
 
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 #include <Windows.h>
-#include <Versionhelpers.h>
 #endif
 
 using namespace std;
@@ -190,11 +189,10 @@ Properties CPURenderEngine::ToProperties(const Properties &cfg) {
 
 const Properties &CPURenderEngine::GetDefaultProps() {
 
-//Check to see if processor group is present else default to old Windeows 7 function.
+//For Windows version greater than Windows 7,modern way of calculating processor count is used 
+//May not work with Windows version prior to Windows 7
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-	SYSTEM_INFO sysInfo;
-	GetSystemInfo(&sysInfo);
-	int processorCount = (IsWindows7OrGreater) ? GetActiveProcessorCount(ALL_PROCESSOR_GROUPS) : sysInfo.dwNumberOfProcessors;
+	int processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 #endif
 	
 	static Properties props = Properties() <<
