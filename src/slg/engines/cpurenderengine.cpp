@@ -29,7 +29,6 @@ using namespace std;
 using namespace luxrays;
 using namespace slg;
 
-int processorCount = 0;
 //------------------------------------------------------------------------------
 // CPURenderThread
 //------------------------------------------------------------------------------
@@ -190,16 +189,17 @@ Properties CPURenderEngine::ToProperties(const Properties &cfg) {
 }
 
 const Properties &CPURenderEngine::GetDefaultProps() {
-	//Check to see if processor group is present else default to old Windeows 7 function.
+
+//Check to see if processor group is present else default to old Windeows 7 function.
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
 	int processorCount = (IsWindows7OrGreater) ? GetActiveProcessorCount(ALL_PROCESSOR_GROUPS) : sysInfo.dwNumberOfProcessors;
 #endif
 	
-#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 	static Properties props = Properties() <<
 		RenderEngine::GetDefaultProps() <<
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 		Property("native.threads.count")(processorCount);
 #else 
 		Property("native.threads.count")(boost::thread::hardware_concurrency());

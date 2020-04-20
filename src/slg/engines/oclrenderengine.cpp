@@ -32,7 +32,6 @@ using namespace std;
 using namespace luxrays;
 using namespace slg;
 
-
 //------------------------------------------------------------------------------
 // OCLRenderEngine
 //------------------------------------------------------------------------------
@@ -147,8 +146,6 @@ const Properties &OCLRenderEngine::GetDefaultProps() {
 #endif
 			Property("opencl.gpu.workgroup.size")(32) <<
 			Property("opencl.devices.select")("") <<
-
-	
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 			Property("opencl.native.threads.count")(processorCount);
 #else
