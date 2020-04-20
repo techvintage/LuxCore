@@ -50,8 +50,6 @@ void PathCPURenderThread::RenderFunc() {
 
 	//Check to see if processor group support is present and then set thread affinity
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined (WIN64)
-	bool hasProcessorGroupsSupport = (GetActiveProcessorGroupCount && GetActiveProcessorCount && SetThreadGroupAffinity); 
-	if (hasProcessorGroupsSupport)
 	{
 		auto totalProcessors = 0U;
 		int processorIndex = threadIndex % GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
