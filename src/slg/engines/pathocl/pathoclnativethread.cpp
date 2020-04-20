@@ -97,7 +97,6 @@ void PathOCLNativeRenderThread::RenderThreadImpl() {
 
 //Check to see if processor group support is present and then set thread affinity
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)	
-	{
 		auto totalProcessors = 0U;
 		int processorIndex = threadIndex % GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 
@@ -113,7 +112,6 @@ void PathOCLNativeRenderThread::RenderThreadImpl() {
 				break;
 			}
 		}
-	}
 #endif
 	// (engine->seedBase + 1) seed is used for sharedRndGen
 	RandomGenerator *rndGen = new RandomGenerator(engine->seedBase + 1 + threadIndex);
