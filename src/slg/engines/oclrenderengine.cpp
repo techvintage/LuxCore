@@ -126,7 +126,6 @@ Properties OCLRenderEngine::ToProperties(const Properties &cfg) {
 }
 
 const Properties &OCLRenderEngine::GetDefaultProps() {
-
 	static Properties props = Properties() <<
 			RenderEngine::GetDefaultProps() <<
 			Property("opencl.cpu.use")(false) <<

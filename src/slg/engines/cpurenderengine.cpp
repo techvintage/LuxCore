@@ -188,7 +188,6 @@ Properties CPURenderEngine::ToProperties(const Properties &cfg) {
 }
 
 const Properties &CPURenderEngine::GetDefaultProps() {
-
 	static Properties props = Properties() <<
 			RenderEngine::GetDefaultProps() <<
 //For Windows version greater than Windows 7,modern way of calculating processor count is used 
