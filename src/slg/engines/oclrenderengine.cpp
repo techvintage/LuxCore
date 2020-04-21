@@ -126,10 +126,8 @@ Properties OCLRenderEngine::ToProperties(const Properties &cfg) {
 }
 
 const Properties &OCLRenderEngine::GetDefaultProps() {
-//Check to see if processor group is present else default to old Windows 7 function.
+//Set processor count using modern way.May not work with Windows version prior to Windows 7
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-	SYSTEM_INFO sysInfo;
-	GetSystemInfo(&sysInfo);
 	int processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 #endif
 	static Properties props = Properties() <<
