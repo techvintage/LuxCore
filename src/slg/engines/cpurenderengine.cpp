@@ -188,16 +188,12 @@ Properties CPURenderEngine::ToProperties(const Properties &cfg) {
 }
 
 const Properties &CPURenderEngine::GetDefaultProps() {
-//Set processor count using modern way.May not work with Windows version prior to Windows 7
-#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-	int processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
-#endif
 	static Properties props = Properties() <<
 			RenderEngine::GetDefaultProps() <<
 //For Windows version greater than Windows 7,modern way of calculating processor count is used 
 //May not work with Windows version prior to Windows 7
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-			Property("native.threads.count")(processorCount);
+			Property("native.threads.count")((int)GetActiveProcessorCount(ALL_PROCESSOR_GROUPS));
 #else 
 			Property("native.threads.count")(boost::thread::hardware_concurrency());
 #endif

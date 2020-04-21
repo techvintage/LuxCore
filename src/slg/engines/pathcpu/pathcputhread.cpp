@@ -48,23 +48,23 @@ void PathCPURenderThread::RenderFunc() {
 	PathCPURenderEngine *engine = (PathCPURenderEngine *)renderEngine;
 	const PathTracer &pathTracer = engine->pathTracer;
 
-	//Check to see if processor group support is present and then set thread affinity
+//Set thread affinity the modern way.May not work for Windows version prior to Windows7
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined (WIN64)
-		auto totalProcessors = 0U;
-		int processorIndex = threadIndex % GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
+	auto totalProcessors = 0U;
+	int processorIndex = threadIndex % GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 
-		// Determine which processor group to bind the thread to.
-		for (auto i = 0U; i < GetActiveProcessorGroupCount(); ++i)
+	// Determine which processor group to bind the thread to.
+	for (auto i = 0U; i < GetActiveProcessorGroupCount(); ++i)
+	{
+		totalProcessors += GetActiveProcessorCount(i);
+		if (totalProcessors >= processorIndex)
 		{
-			totalProcessors += GetActiveProcessorCount(i);
-			if (totalProcessors >= processorIndex)
-			{
-				auto mask = (1ULL << GetActiveProcessorCount(i)) - 1;
-				GROUP_AFFINITY groupAffinity = { mask, static_cast<WORD>(i), { 0, 0, 0 } };
-				SetThreadGroupAffinity(GetCurrentThread(), &groupAffinity, nullptr);
-				break;
-			}
+			auto mask = (1ULL << GetActiveProcessorCount(i)) - 1;
+			GROUP_AFFINITY groupAffinity = { mask, static_cast<WORD>(i), { 0, 0, 0 } };
+			SetThreadGroupAffinity(GetCurrentThread(), &groupAffinity, nullptr);
+			break;
 		}
+	}
 #endif
 	// (engine->seedBase + 1) seed is used for sharedRndGen
 	RandomGenerator *rndGen = new RandomGenerator(engine->seedBase + 1 + threadIndex);
