@@ -195,7 +195,7 @@ const Properties &CPURenderEngine::GetDefaultProps() {
 	int processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
 #endif
 	static Properties props = Properties() <<
-		RenderEngine::GetDefaultProps() <<
+			RenderEngine::GetDefaultProps() <<
 //For Windows version greater than Windows 7,modern way of calculating processor count is used 
 //May not work with Windows version prior to Windows 7
 #if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
